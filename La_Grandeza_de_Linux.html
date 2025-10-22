@@ -1,0 +1,398 @@
+<!-- Chosen Palette: Warm Neutrals (Gray-50, White) with Technical Accents (Sky-600) -->
+<!-- Application Structure Plan: Dashboard approach with four thematic panels: 1. Impacto Estadístico (Charts for Market Share), 2. Fortalezas Técnicas (Tabbed content for Security/Stability), 3. Elección y Personalización (Clickable cards for Distros/Desktops), and 4. Comunidad y Desarrollo (Flow diagram). This structure is chosen to move from quantitative proof to qualitative benefits and process understanding, which is the most logical flow for a persuasive report like this, prioritizing user drill-down capabilities. -->
+<!-- Visualization & Content Choices:
+- Report Info -> Server Market Share -> Goal -> Inform Proportions -> Viz/Presentation Method -> Doughnut Chart -> Interaction -> Segment Filter/Selector -> Justification -> Clear, concise proof of industry dominance. -> Library/Method - Chart.js
+- Report Info -> Supercomputing/Technical Advantages -> Goal -> Compare/Highlight -> Viz/Presentation Method -> Dynamic Text Blocks -> Interaction -> Tab switching (Security, Stability, Performance) -> Justification -> Allows deep dive into technical claims without visual clutter. -> Library/Method - Vanilla JS
+- Report Info -> Customization/Distributions -> Goal -> Explore Options -> Viz/Presentation Method -> Clickable Cards -> Interaction -> Card selection updates main text area -> Justification -> Visual representation of diversity and user choice. -> Library/Method - Vanilla JS
+- Report Info -> Open Source Model -> Goal -> Organize/Explain Process -> Viz/Presentation Method -> Styled HTML/Tailwind Flowchart -> Interaction -> Hover for detail -> Justification -> Visually explains the developmental process effectively. -> Library/Method - HTML/CSS/JS (NO SVG)
+-->
+<!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>La Grandeza de Linux: Análisis Interactivo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+    <style>
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 650px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 400px;
+            padding: 1rem;
+        }
+        @media (max-width: 640px) {
+            .chart-container {
+                height: 250px;
+            }
+        }
+        .flow-step {
+            transition: all 0.3s ease;
+        }
+        .flow-step:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px rgba(59, 130, 246, 0.3);
+            background-color: #f0f9ff;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans text-gray-800">
+
+    <div id="app" class="min-h-screen">
+        <!-- HEADER / NAVIGATION -->
+        <header class="bg-sky-700 shadow-xl sticky top-0 z-10">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+                <h1 class="text-3xl font-extrabold text-white">
+                    Análisis: La Grandeza de Linux
+                </h1>
+                <nav class="hidden md:flex space-x-6">
+                    <a href="#stats" class="text-white hover:text-sky-200 transition duration-150 font-medium">Impacto</a>
+                    <a href="#tech" class="text-white hover:text-sky-200 transition duration-150 font-medium">Técnico</a>
+                    <a href="#choice" class="text-white hover:text-sky-200 transition duration-150 font-medium">Libertad</a>
+                    <a href="#community" class="text-white hover:text-sky-200 transition duration-150 font-medium">Comunidad</a>
+                </nav>
+            </div>
+        </header>
+
+        <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-16">
+
+            <!-- INTRODUCTORY SUMMARY -->
+            <section class="bg-white p-8 rounded-xl shadow-2xl">
+                <h2 class="text-4xl font-bold text-sky-700 mb-4">Linux: El Sistema Operativo que Impulsa el Mundo</h2>
+                <p class="text-lg leading-relaxed border-l-4 border-sky-500 pl-4 italic">
+                    Linux, más que un simple sistema operativo, es un ecosistema global basado en la libertad, la seguridad y la colaboración. Esta aplicación interactiva desglosa las pruebas cuantitativas y los beneficios cualitativos que lo han convertido en la columna vertebral de la infraestructura tecnológica moderna, desde el servidor hasta el superordenador. Utiliza los paneles a continuación para explorar su impacto en profundidad.
+                </p>
+            </section>
+
+            <!-- SECTION 1: IMPACTO ESTADÍSTICO (QUANTITATIVE DATA) -->
+            <section id="stats" class="space-y-6">
+                <h3 class="text-3xl font-bold text-gray-700 border-b-2 border-sky-500 pb-2">1. Estadísticas de Impacto Global</h3>
+                <p class="text-gray-600">
+                    Esta sección revela el dominio silencioso de Linux a nivel mundial. La información se centra en dónde se utiliza Linux a escala industrial, demostrando que su estabilidad y eficiencia lo han convertido en la opción preferida para cargas de trabajo críticas. Utiliza el selector para cambiar entre diferentes métricas de mercado.
+                </p>
+
+                <div class="bg-white p-6 rounded-xl shadow-lg grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
+                    <div class="md:col-span-1">
+                        <label for="stat-selector" class="block text-sm font-medium text-gray-700 mb-2">Seleccione Métrica de Mercado:</label>
+                        <select id="stat-selector" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-sky-500 focus:border-sky-500 transition duration-150 bg-gray-50">
+                            <option value="server">Servidores Web y Nube</option>
+                            <option value="super">Supercomputadoras</option>
+                            <option value="embedded">Sistemas Embebidos (IoT, Android)</option>
+                        </select>
+                        <div id="stat-description" class="mt-4 p-4 border-l-4 border-sky-400 bg-sky-50 rounded-md">
+                            <p class="font-semibold text-sky-700">Servidores Web y Nube:</p>
+                            <p class="text-sm text-gray-600">Linux impulsa la gran mayoría de la infraestructura en la nube y los servidores web más grandes del mundo (AWS, Google Cloud, Azure).</p>
+                        </div>
+                    </div>
+
+                    <div class="md:col-span-2">
+                        <!-- Chart Container for Chart.js -->
+                        <div class="chart-container bg-white rounded-lg shadow-inner">
+                            <canvas id="impactChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 2: FORTALEZAS TÉCNICAS (QUALITATIVE/COMPARISON) -->
+            <section id="tech" class="space-y-6">
+                <h3 class="text-3xl font-bold text-gray-700 border-b-2 border-sky-500 pb-2">2. Fortalezas: Seguridad, Estabilidad y Rendimiento</h3>
+                <p class="text-gray-600">
+                    Los ingenieros eligen Linux por sus ventajas técnicas inherentes. Esta sección te permite examinar por qué los desarrolladores y los profesionales de TI confían en el kernel de Linux para ofrecer un rendimiento inigualable. Haz clic en las pestañas para profundizar en cada beneficio clave.
+                </p>
+
+                <div class="bg-white p-6 rounded-xl shadow-lg">
+                    <div class="flex border-b border-gray-200">
+                        <button data-tech="security" class="tech-tab px-4 py-2 text-sm font-medium border-b-2 border-transparent hover:border-sky-500 transition duration-150 text-gray-600" aria-current="page">Seguridad</button>
+                        <button data-tech="stability" class="tech-tab px-4 py-2 text-sm font-medium border-b-2 border-transparent hover:border-sky-500 transition duration-150 text-gray-600">Estabilidad</button>
+                        <button data-tech="performance" class="tech-tab px-4 py-2 text-sm font-medium border-b-2 border-transparent hover:border-sky-500 transition duration-150 text-gray-600">Rendimiento</button>
+                    </div>
+                    <div id="tech-content" class="pt-4">
+                        <!-- Content updated by JS -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 3: LIBERTAD Y ELECCIÓN (EXPLORATION) -->
+            <section id="choice" class="space-y-6">
+                <h3 class="text-3xl font-bold text-gray-700 border-b-2 border-sky-500 pb-2">3. El Poder de la Elección y la Personalización</h3>
+                <p class="text-gray-600">
+                    A diferencia de los sistemas propietarios, Linux ofrece una inmensa diversidad a través de sus "Distribuciones" (conjuntos completos de sistemas operativos) y "Entornos de Escritorio". Explora cómo la modularidad permite a los usuarios y empresas adaptar el sistema a cualquier necesidad específica. Haz clic en las tarjetas de distribución para ver sus características.
+                </p>
+
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                    <div data-distro="ubuntu" class="distro-card p-4 text-center rounded-lg shadow-md cursor-pointer bg-sky-100 hover:bg-sky-200 transition duration-200">
+                        <p class="font-bold text-sky-700">Ubuntu</p>
+                        <p class="text-xs text-gray-600">Popularidad y Facilidad</p>
+                    </div>
+                    <div data-distro="redhat" class="distro-card p-4 text-center rounded-lg shadow-md cursor-pointer bg-white hover:bg-gray-100 transition duration-200">
+                        <p class="font-bold text-gray-700">RHEL/Fedora</p>
+                        <p class="text-xs text-gray-600">Empresarial y Servidores</p>
+                    </div>
+                    <div data-distro="arch" class="distro-card p-4 text-center rounded-lg shadow-md cursor-pointer bg-white hover:bg-gray-100 transition duration-200">
+                        <p class="font-bold text-gray-700">Arch Linux</p>
+                        <p class="text-xs text-gray-600">Minimalista y "Rolling Release"</p>
+                    </div>
+                    <div data-distro="kali" class="distro-card p-4 text-center rounded-lg shadow-md cursor-pointer bg-white hover:bg-gray-100 transition duration-200">
+                        <p class="font-bold text-gray-700">Kali Linux</p>
+                        <p class="text-xs text-gray-600">Seguridad y Pruebas de Penetración</p>
+                    </div>
+                </div>
+
+                <div id="distro-detail" class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-sky-500">
+                    <!-- Detail updated by JS -->
+                </div>
+            </section>
+
+            <!-- SECTION 4: COMUNIDAD Y DESARROLLO (PROCESS) -->
+            <section id="community" class="space-y-6">
+                <h3 class="text-3xl font-bold text-gray-700 border-b-2 border-sky-500 pb-2">4. Comunidad y Modelo de Código Abierto</h3>
+                <p class="text-gray-600">
+                    El corazón de Linux es su modelo de desarrollo abierto y descentralizado. Esta estructura garantiza una rápida innovación, transparencia y una corrección de errores más eficiente. Este diagrama de flujo simple ilustra los pasos clave de cómo la comunidad mantiene el sistema. Pasa el ratón sobre cada paso para ver la explicación.
+                </p>
+
+                <div class="flex flex-col md:flex-row justify-center items-center md:items-stretch space-y-4 md:space-y-0 md:space-x-4">
+                    <!-- Step 1 -->
+                    <div class="flow-step bg-white p-5 rounded-xl shadow-lg w-full md:w-1/4 flex flex-col items-center text-center">
+                        <span class="text-3xl mb-2 text-sky-600">⚙️</span>
+                        <p class="font-bold">Propuesta de Cambio</p>
+                        <p class="text-xs text-gray-500 mt-2">Cualquier desarrollador puede proponer una mejora o corrección.</p>
+                    </div>
+                    <!-- Arrow -->
+                    <div class="hidden md:flex items-center text-sky-500 text-3xl">→</div>
+                    <div class="block md:hidden flex justify-center text-sky-500 text-3xl">↓</div>
+
+                    <!-- Step 2 -->
+                    <div class="flow-step bg-white p-5 rounded-xl shadow-lg w-full md:w-1/4 flex flex-col items-center text-center">
+                        <span class="text-3xl mb-2 text-sky-600">👁️‍🗨️</span>
+                        <p class="font-bold">Revisión de Pares</p>
+                        <p class="text-xs text-gray-500 mt-2">El código es revisado por múltiples expertos de la comunidad.</p>
+                    </div>
+                    <!-- Arrow -->
+                    <div class="hidden md:flex items-center text-sky-500 text-3xl">→</div>
+                    <div class="block md:hidden flex justify-center text-sky-500 text-3xl">↓</div>
+
+                    <!-- Step 3 -->
+                    <div class="flow-step bg-white p-5 rounded-xl shadow-lg w-full md:w-1/4 flex flex-col items-center text-center">
+                        <span class="text-3xl mb-2 text-sky-600">✅</span>
+                        <p class="font-bold">Integración al Kernel</p>
+                        <p class="text-xs text-gray-500 mt-2">Una vez aprobado, el cambio se incorpora al código principal.</p>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- FOOTER -->
+        <footer class="mt-16 bg-gray-200 text-center p-6 text-sm text-gray-600">
+            <p>© 2025 Análisis de la Grandeza de Linux. Impulsado por la filosofía de Código Abierto.</p>
+        </footer>
+    </div>
+
+    <script>
+        const chartData = {
+            server: {
+                labels: ['Servidores Web (Nube)', 'Otros SO', 'Sistemas Propietarios'],
+                data: [90, 5, 5],
+                title: 'Dominio de Linux en la Infraestructura Cloud',
+                description: 'Linux impulsa aproximadamente el 90% de las cargas de trabajo en la nube pública, ofreciendo la estabilidad requerida por los centros de datos a gran escala.',
+                type: 'doughnut',
+                color: ['#06b6d4', '#cbd5e1', '#64748b']
+            },
+            super: {
+                labels: ['Súpercomputadoras (Top 500)', 'Otros SO (0%)'],
+                data: [100, 0],
+                title: 'Uso en la Lista TOP500 de Supercomputadoras',
+                description: 'El 100% de las 500 supercomputadoras más potentes del mundo ejecutan alguna forma de Linux, una prueba definitiva de su capacidad de rendimiento.',
+                type: 'bar',
+                color: ['#0891b2', '#64748b']
+            },
+            embedded: {
+                labels: ['Android/Smart TV', 'Routers/IoT', 'Sistemas de Consola'],
+                data: [75, 15, 10],
+                title: 'Penetración en Sistemas Embebidos (IoT)',
+                description: 'Android (basado en Linux) y millones de dispositivos IoT (cámaras, enrutadores) utilizan el kernel de Linux debido a su bajo consumo de recursos y flexibilidad.',
+                type: 'bar',
+                color: ['#0ea5e9', '#38bdf8', '#7dd3fc']
+            }
+        };
+
+        const techContent = {
+            security: {
+                title: 'Seguridad: Transparencia vs. Opacidad',
+                text: 'El código fuente abierto de Linux permite que miles de ojos revisen constantemente el código, identificando y corrigiendo vulnerabilidades más rápido que cualquier sistema propietario. Su modelo de permisos de usuario inherente también reduce la superficie de ataque.'
+            },
+            stability: {
+                title: 'Estabilidad: El Uptime es la Ley',
+                text: 'El kernel de Linux está diseñado para operar durante meses o incluso años sin necesidad de reinicios. Su gestión superior de procesos y memoria lo hace la opción de facto para servidores críticos que requieren alta disponibilidad (High Availability).'
+            },
+            performance: {
+                title: 'Rendimiento: Optimización a la Medida',
+                text: 'Linux es ligero y altamente optimizable. No contiene bloatware y permite a los administradores de sistemas configurar el kernel y los módulos solo con lo estrictamente necesario, resultando en una velocidad y una eficiencia de recursos que no tienen comparación.'
+            }
+        };
+
+        const distroContent = {
+            ubuntu: {
+                name: 'Ubuntu: La Puerta de Entrada',
+                text: 'Reconocida por su facilidad de uso y un gran soporte comunitario, Ubuntu es ideal para principiantes y para el desarrollo empresarial. Ofrece una experiencia de escritorio pulida y amigable.',
+                icon: '🚀'
+            },
+            redhat: {
+                name: 'Red Hat Enterprise Linux (RHEL): Gigante Empresarial',
+                text: 'Orientada al soporte comercial y certificaciones. Es la columna vertebral de muchas corporaciones. Fedora es su versión comunitaria y de vanguardia, ideal para probar nuevas tecnologías.',
+                icon: '💼'
+            },
+            arch: {
+                name: 'Arch Linux: El Control Total',
+                text: 'Conocida por su simplicidad (conceptual, no de instalación), su modelo "Rolling Release" y el "Arch Wiki". Es la favorita de usuarios avanzados que desean construir su sistema desde cero.',
+                icon: '🛠️'
+            },
+            kali: {
+                name: 'Kali Linux: Herramientas de Seguridad',
+                text: 'Diseñada específicamente para profesionales de la seguridad y el hacking ético. Viene preinstalada con cientos de herramientas para pruebas de penetración y auditorías de seguridad.',
+                icon: '🛡️'
+            }
+        };
+
+        let impactChart = null;
+
+        const wrapLabels = (label, maxChars = 16) => {
+            const words = label.split(' ');
+            let lines = [];
+            let currentLine = '';
+            words.forEach(word => {
+                if ((currentLine + ' ' + word).length > maxChars && currentLine.length > 0) {
+                    lines.push(currentLine);
+                    currentLine = word;
+                } else {
+                    currentLine = currentLine ? currentLine + ' ' + word : word;
+                }
+            });
+            lines.push(currentLine);
+            return lines;
+        };
+
+        const initializeChart = (dataKey) => {
+            const data = chartData[dataKey];
+            const ctx = document.getElementById('impactChart').getContext('2d');
+
+            if (impactChart) {
+                impactChart.destroy();
+            }
+
+            impactChart = new Chart(ctx, {
+                type: data.type,
+                data: {
+                    labels: data.labels.map(label => wrapLabels(label)),
+                    datasets: [{
+                        label: data.title,
+                        data: data.data,
+                        backgroundColor: data.color,
+                        borderColor: data.color.map(c => c.replace('0.', '0.8')),
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: data.title,
+                            font: { size: 18, weight: 'bold' }
+                        },
+                        legend: {
+                            position: 'bottom',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.label || '';
+                                    if (label) {
+                                        label = label.replace(',', ' '); // Flatten wrapped labels for tooltip
+                                    }
+                                    if (context.parsed !== null) {
+                                        label += ': ' + context.parsed + '%';
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: data.type === 'bar' ? {
+                        x: { beginAtZero: true },
+                        y: { beginAtZero: true }
+                    } : {}
+                }
+            });
+            document.getElementById('stat-description').innerHTML = `
+                <p class="font-semibold text-sky-700">${data.labels[0]}:</p>
+                <p class="text-sm text-gray-600">${data.description}</p>
+            `;
+        };
+
+        const updateTechContent = (key) => {
+            const content = techContent[key];
+            const contentDiv = document.getElementById('tech-content');
+            contentDiv.innerHTML = `
+                <h4 class="text-xl font-semibold text-sky-600 mb-2">${content.title}</h4>
+                <p class="text-base text-gray-700">${content.text}</p>
+            `;
+
+            document.querySelectorAll('.tech-tab').forEach(tab => {
+                tab.classList.remove('text-sky-700', 'border-sky-500');
+                tab.classList.add('text-gray-600');
+                if (tab.dataset.tech === key) {
+                    tab.classList.add('text-sky-700', 'border-sky-500');
+                    tab.classList.remove('text-gray-600');
+                }
+            });
+        };
+
+        const updateDistroDetail = (key) => {
+            const content = distroContent[key];
+            const detailDiv = document.getElementById('distro-detail');
+            detailDiv.innerHTML = `
+                <h4 class="text-2xl font-bold text-sky-700 mb-2">${content.icon} ${content.name}</h4>
+                <p class="text-lg text-gray-700">${content.text}</p>
+            `;
+
+            document.querySelectorAll('.distro-card').forEach(card => {
+                card.classList.remove('bg-sky-100', 'shadow-xl');
+                card.classList.add('bg-white', 'shadow-md');
+                if (card.dataset.distro === key) {
+                    card.classList.add('bg-sky-100', 'shadow-xl');
+                    card.classList.remove('bg-white', 'shadow-md');
+                }
+            });
+        };
+
+        // --- Event Listeners and Initial Load ---
+        window.onload = function() {
+            // 1. Initialize Charts (Section 1)
+            const statSelector = document.getElementById('stat-selector');
+            statSelector.addEventListener('change', (e) => initializeChart(e.target.value));
+            initializeChart('server'); // Initial chart
+
+            // 2. Initialize Tech Content (Section 2)
+            document.querySelectorAll('.tech-tab').forEach(tab => {
+                tab.addEventListener('click', () => updateTechContent(tab.dataset.tech));
+            });
+            updateTechContent('security'); // Initial content
+
+            // 3. Initialize Distro Detail (Section 3)
+            document.querySelectorAll('.distro-card').forEach(card => {
+                card.addEventListener('click', () => updateDistroDetail(card.dataset.distro));
+            });
+            updateDistroDetail('ubuntu'); // Initial content
+        };
+    </script>
+
+</body>
+</html>
